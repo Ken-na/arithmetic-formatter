@@ -4,6 +4,9 @@ def arithmetic_arranger(problems, printAnswers = False):
     seperatedSum = []
     seperatedBot = []
     longest = 0
+    if len(problems) > 5:
+        return 'Error: Too many problems.'
+
     for s in problems:
         seperated = s.split()
         seperatedTop.append(seperated[0])
@@ -26,56 +29,61 @@ def arithmetic_arranger(problems, printAnswers = False):
             return 'Error: Numbers must only contain digits.'
     longest += 4
     #for s in problems:
-    if len(seperatedTop) > 4:
-        return 'Error: Too many problems.'
-    for r in seperatedTop:
-        arranged_problems += '{:>11}  '.format(r)
-        arranged_problems += "    "
+
+    top = ""
+    bot = ""
+    line = ""
+    answer = ""
     pos = 0
-    arranged_problems += "\n"
 
-    lineCount = []
-
-    for r in seperatedBot:
-        s = seperatedSum[pos]
-        t = 0
+    for s in problems:
+        width = 0
         if len(seperatedTop[pos]) > len(seperatedBot[pos]):
-            g = len(seperatedTop[pos])
-            while t < abs(len(seperatedTop[pos]) - len(seperatedBot[pos])):
-                s += " "
-                t += 1
+            width = len(seperatedTop[pos])
         else:
-            g = len(seperatedBot[pos])
-        s += " "
-        s += seperatedBot[pos]
-        arranged_problems += '{:>11}  '.format(s)
-        pos += 1
-        lineCount.append(g)
-        arranged_problems += "    "
-    arranged_problems += "\n"
-        #arranged_problems = '{:>11}  {:>11}  {:>11}'.format(seperatedTop[0], seperatedTop[1], seperatedTop[2])
+            width = len(seperatedBot[pos])
+        width += 2 #count for symbol
+        if pos != 0:
+            top += "    "
+            bot += "    "
+            line += "    "
+            answer += "    "
 
-    for r in lineCount:
-        s = ""
-        g = 0
-        while g < (r + 2):
-            s += "-"
-            g += 1
-        arranged_problems += '{:>11}  '.format(s)
-        arranged_problems += "    "
-        pos = 0
-    arranged_problems += "\n"
-    if printAnswers:
-        #print answers, should be conditional.
-        for r in problems:
+        p = len(seperatedTop[pos])
+        while p < width:
+            top += " "
+            p += 1
+        top += seperatedTop[pos]
+
+        bot += seperatedSum[pos]
+
+        p = len(seperatedBot[pos]) + 1
+        while p < width:
+            bot += " "
+            p += 1
+        bot += seperatedBot[pos]
+
+        p = 0
+        while p < width:
+            line += "-"
+            p += 1
+
+        if printAnswers:
+            #print answers, should be conditional.
             val = -1
             if seperatedSum[pos] == "+":
                 val = int(seperatedTop[pos]) + int(seperatedBot[pos])
             elif seperatedSum[pos] == "-":
                 val = int(seperatedTop[pos]) - int(seperatedBot[pos])
+            p = len(str(val))
+            while p < width:
+                answer += " "
+                p += 1
+            answer += str(val)
 
-            arranged_problems += '{:>11}  '.format(str(val))
-            arranged_problems += "    "
-            pos += 1
+        pos += 1
 
+    arranged_problems = top + "\n" + bot + "\n" + line
+    if printAnswers:
+        arranged_problems += "\n" + answer
     return arranged_problems
